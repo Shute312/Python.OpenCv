@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>eaa248c8-bc7a-4856-8964-8606126f6f4f</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>examples\houghLinesTest.py</StartupFile>
+    <StartupFile>examples\morphologyExTest.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -29,8 +29,14 @@
     <Compile Include="examples\gaussianBlurTest.py" />
     <Compile Include="examples\houghLinesTest.py" />
     <Compile Include="examples\mediaBlurTest.py" />
+    <Compile Include="examples\morphologyExTest.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="examples\siftDemo.py" />
     <Compile Include="test.py" />
+    <Compile Include="ui\ControlType.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ui\view.py">
       <SubType>Code</SubType>
     </Compile>

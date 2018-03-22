@@ -20,7 +20,7 @@ def update(parmas):
 
 tk = Tk();
 tk.geometry("{0}x{1}".format(size[0],size[1]));
-view = View(tk,size,tracks,None,update)
+view = View(update,tk,size,tracks,None,None)
 # 设置窗口标题:
 tk.title('BilateralFilter')
 # 主消息循环:

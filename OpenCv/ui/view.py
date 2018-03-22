@@ -3,6 +3,7 @@
 __author__ = 'Shute'
 
 from Tkinter import * 
+from Tix import Tk, Control, ComboBox
 import tkFileDialog
 import numpy as np;
 from PIL import Image
@@ -18,17 +19,23 @@ class Track(object):
         self.default = default
         self.value = default
 
+class Select(object):
+    def __init__(self,name,values):
+        self.name = name
+        self.values = values;
 class View(Frame):
-    def __init__(self,tk,size,tracks,inputs,changeCallback):
+    def __init__(self,changeCallback,tk,size,tracks,inputs,selects):
         '''
         @parma size:  type tuple
         @parma tracks:  type Track[]
         @parma inputs:  type tuple<name,value>[]
+        @parma select: type select[],
         '''
         Frame.__init__(self)
         self.size = size;
         self.tracks = [];
         self.inputs = [];
+        self.selects = [];
         self.controls = {};
         self.changeCallback = changeCallback;
         if(tracks!=None):
@@ -45,6 +52,14 @@ class View(Frame):
             else:
                 self.inputs.append(inputs);
 
+        if(selects!=None):
+            if(isinstance(selects,Select)):
+                self.selects.append(selects);
+            else:
+                for i,item in enumerate(selects):
+                    self.selects.append(item);
+        else:
+            raise ValueError("selects必须为数组");
 
         self.place(in_=tk,rely = 0,relheight = 1,relwidth = 1);
 
@@ -82,6 +97,23 @@ class View(Frame):
             xOffset = xOffset+xPadding+text.winfo_reqwidth();
             ip.place(x=xOffset,y=yOffset)
             xOffset = xOffset+xPadding+ip.winfo_reqwidth();
+        yOffset = yOffset+yIncrement+yPadding;
+
+        #Select Box
+        for i,item in enumerate(self.selects):
+            values = StringVar()
+            select = ComboBox(self,label=item.name,editable=False)
+            for text in item.values:
+                select.insert(END,text);
+            select["selection"]=item.values[0];
+            self.controls[item.name] = select;
+            select.place(x=xOffset,y=yOffset)
+            #yIncrement = select.winfo_height();
+            yIncrement = 12
+            xOffset = xOffset+xPadding+select.winfo_reqwidth();
+        yOffset = yOffset+yIncrement+yPadding;
+            #select.current(0)    # 设置下拉列表默认显示的值，0为 numberChosen['values'] 的下标值
+
        
         xOffset = xPadding;
         yOffset = yOffset + yIncrement + xPadding
@@ -114,6 +146,8 @@ class View(Frame):
                 params[k] = v.get();
             elif isinstance(v,Entry):
                 params[k] = v.get();
+            elif isinstance(v,ComboBox):
+                params[k] = v['selection'];
 
         (srcPath,dstPath) = self.changeCallback(params);
         self.setImage(self.srcImage,ImageTk.PhotoImage(Image.open(srcPath)));
